@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>GameBoy Color 复古掌机</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 掌机主体 -->
+        <div class="gameboy" id="gameboy">
+            <!-- 顶部区域 -->
+            <div class="top-section">
+                <!-- 左肩键 L -->
+                <button class="shoulder-btn left" id="btn-l" data-key="l">L</button>
+                <!-- 装饰性元素 -->
+                <div class="top-decoration">
+                    <div class="screw top-left"></div>
+                    <div class="brand-text">GAME BOY <span class="color-text">COLOR</span></div>
+                    <div class="screw top-right"></div>
+                </div>
+                <!-- 右肩键 R -->
+                <button class="shoulder-btn right" id="btn-r" data-key="r">R</button>
+            </div>
+
+            <!-- 屏幕区域 -->
+            <div class="screen-area">
+                <div class="screen-bezel">
+                    <div class="power-indicator">
+                        <div class="led" id="power-led"></div>
+                        <span>POWER</span>
+                    </div>
+                    <div class="screen-frame">
+                        <div class="screen-glass">
+                            <canvas id="game-canvas" width="320" height="288"></canvas>
+                            <div class="screen-reflection"></div>
+                        </div>
+                    </div>
+                    <div class="screen-label">
+                        <span class="dot red"></span>
+                        <span class="dot orange"></span>
+                        <span class="dot green"></span>
+                        <span class="dot blue"></span>
+                        BATTERY
+                    </div>
+                </div>
+            </div>
+
+            <!-- 品牌标识 -->
+            <div class="brand-logo">
+                <span class="nintendo-text">Nintendo</span>
+                <span class="model-text">GAME BOY</span>
+            </div>
+
+            <!-- 控制区域 -->
+            <div class="controls-area">
+                <!-- D-Pad 十字键 -->
+                <div class="dpad-container">
+                    <div class="dpad">
+                        <button class="dpad-btn up" id="btn-up" data-key="up"></button>
+                        <button class="dpad-btn right" id="btn-right" data-key="right"></button>
+                        <button class="dpad-btn down" id="btn-down" data-key="down"></button>
+                        <button class="dpad-btn left" id="btn-left" data-key="left"></button>
+                        <div class="dpad-center"></div>
+                    </div>
+                </div>
+
+                <!-- A/B 按钮 -->
+                <div class="ab-buttons">
+                    <div class="ab-row">
+                        <div class="btn-wrapper">
+                            <button class="action-btn b-btn" id="btn-b" data-key="b">B</button>
+                            <span class="btn-label">B</span>
+                        </div>
+                        <div class="btn-wrapper">
+                            <button class="action-btn a-btn" id="btn-a" data-key="a">A</button>
+                            <span class="btn-label">A</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start/Select 按钮 -->
+            <div class="function-buttons">
+                <div class="func-btn-wrapper">
+                    <button class="func-btn" id="btn-select" data-key="select"></button>
+                    <span class="func-label">SELECT</span>
+                </div>
+                <div class="func-btn-wrapper">
+                    <button class="func-btn" id="btn-start" data-key="start"></button>
+                    <span class="func-label">START</span>
+                </div>
+            </div>
+
+            <!-- 扬声器 -->
+            <div class="speaker-area">
+                <div class="speaker-grille">
+                    <div class="speaker-hole"></div>
+                    <div class="speaker-hole"></div>
+                    <div class="speaker-hole"></div>
+                    <div class="speaker-hole"></div>
+                    <div class="speaker-hole"></div>
+                    <div class="speaker-hole"></div>
+                </div>
+            </div>
+
+            <!-- 底部装饰螺丝 -->
+            <div class="bottom-screws">
+                <div class="screw bottom-left"></div>
+                <div class="screw bottom-right"></div>
+            </div>
+        </div>
+
+        <!-- 配色选择器 -->
+        <div class="color-picker">
+            <span>外壳配色：</span>
+            <button class="color-option purple active" data-color="purple" title="透明紫"></button>
+            <button class="color-option gray" data-color="gray" title="经典灰"></button>
+            <button class="color-option lime" data-color="lime" title="青柠绿"></button>
+            <button class="color-option berry" data-color="berry" title="莓果红"></button>
+            <button class="color-option teal" data-color="teal" title="青蓝色"></button>
+        </div>
+
+        <!-- 控制说明 -->
+        <div class="controls-help">
+            <h3>键盘控制</h3>
+            <div class="key-list">
+                <span><kbd>↑↓←→</kbd> 方向</span>
+                <span><kbd>Z</kbd> A键</span>
+                <span><kbd>X</kbd> B键</span>
+                <span><kbd>Enter</kbd> Start</span>
+                <span><kbd>Shift</kbd> Select</span>
+                <span><kbd>Q</kbd>/<kbd>E</kbd> L/R</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 立即绘制初始菜单（不依赖ES模块）
+        (function() {
+            window.addEventListener('DOMContentLoaded', function() {
+                var canvas = document.getElementById('game-canvas');
+                var ctx = canvas.getContext('2d');
+                var width = 320, height = 288;
+                
+                // 游戏列表
+                var gameList = [
+                    { name: '俄罗斯方块', icon: '▦' },
+                    { name: '贪吃蛇', icon: '◐' },
+                    { name: '极速赛车', icon: '▲' },
+                    { name: '坦克大战', icon: '◈' },
+                    { name: '打砖块', icon: '▬' },
+                    { name: '魂斗罗', icon: '⚔' },
+                    { name: '超级玛丽', icon: '★' },
+                    { name: '太空战机', icon: '✈' },
+                    { name: '吃豆人', icon: '◔' },
+                    { name: '青蛙过河', icon: '✿' }
+                ];
+                
+                var selectedIndex = 0;
+                var animTime = 0;
+                var showError = false;
+                var errorTimer = 0;
+                var fallbackActive = false;
+                
+                function drawMenu() {
+                    // 背景
+                    var gradient = ctx.createLinearGradient(0, 0, 0, height);
+                    gradient.addColorStop(0, '#1a1a3e');
+                    gradient.addColorStop(1, '#0a0a1e');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, width, height);
+                    
+                    // 标题
+                    ctx.fillStyle = '#ffcc00';
+                    ctx.font = 'bold 20px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('GAME SELECT', width / 2, 25);
+                    
+                    // 游戏列表
+                    var itemHeight = 28;
+                    var startY = 50;
+                    
+                    gameList.forEach(function(game, index) {
+                        var y = startY + index * itemHeight;
+                        var isSelected = index === selectedIndex;
+                        
+                        if (isSelected) {
+                            var pulse = Math.sin(animTime * 0.003) * 0.2 + 0.8;
+                            ctx.fillStyle = 'rgba(100, 150, 255, ' + (pulse * 0.3) + ')';
+                            ctx.fillRect(15, y - 12, width - 30, 26);
+                            
+                            ctx.fillStyle = '#ff6b6b';
+                            ctx.font = '14px monospace';
+                            ctx.textAlign = 'left';
+                            ctx.fillText('▶', 22, y + 5);
+                        }
+                        
+                        ctx.fillStyle = isSelected ? '#ffffff' : '#888888';
+                        ctx.font = '16px monospace';
+                        ctx.textAlign = 'left';
+                        ctx.fillText(game.icon, 45, y + 5);
+                        
+                        ctx.fillStyle = isSelected ? '#ffffff' : '#aaaaaa';
+                        ctx.font = isSelected ? 'bold 14px monospace' : '14px monospace';
+                        ctx.fillText(game.name, 75, y + 5);
+                        
+                        ctx.fillStyle = isSelected ? '#ffcc00' : '#555555';
+                        ctx.font = '10px monospace';
+                        ctx.textAlign = 'right';
+                        ctx.fillText('' + (index + 1), width - 20, y + 4);
+                    });
+                    
+                    // 底部提示
+                    ctx.fillStyle = '#666666';
+                    ctx.font = '12px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('↑↓选择  Z/Enter确认', width / 2, height - 8);
+                    
+                    // 显示错误提示
+                    if (showError) {
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+                        ctx.fillRect(20, 80, width - 40, 130);
+                        ctx.strokeStyle = '#ff6b6b';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(20, 80, width - 40, 130);
+                        
+                        ctx.fillStyle = '#ff6b6b';
+                        ctx.font = 'bold 16px monospace';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('⚠ 无法加载游戏', width / 2, 110);
+                        
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '12px monospace';
+                        ctx.fillText('请使用本地服务器打开', width / 2, 140);
+                        ctx.fillText('不能直接双击HTML文件', width / 2, 160);
+                        
+                        ctx.fillStyle = '#888888';
+                        ctx.font = '11px monospace';
+                        ctx.fillText('推荐: npx http-server', width / 2, 190);
+                        
+                        errorTimer--;
+                        if (errorTimer <= 0) {
+                            showError = false;
+                        }
+                    }
+                    
+                    animTime += 16;
+                }
+                
+                // 键盘控制
+                document.addEventListener('keydown', function(e) {
+                    if (window.gameBoyAppLoaded) return; // ES模块已加载，不处理
+                    
+                    if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        selectedIndex = (selectedIndex - 1 + gameList.length) % gameList.length;
+                    } else if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        selectedIndex = (selectedIndex + 1) % gameList.length;
+                    } else if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter') {
+                        e.preventDefault();
+                        // 显示错误提示
+                        showError = true;
+                        errorTimer = 180; // 约3秒
+                    } else if (e.key === 'q' || e.key === 'Q') {
+                        e.preventDefault();
+                        selectedIndex = 0;
+                    } else if (e.key === 'e' || e.key === 'E') {
+                        e.preventDefault();
+                        selectedIndex = gameList.length - 1;
+                    }
+                });
+                
+                // 触摸/点击按钮支持
+                document.querySelectorAll('[data-key]').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        if (window.gameBoyAppLoaded) return;
+                        var key = btn.dataset.key;
+                        if (key === 'up') {
+                            selectedIndex = (selectedIndex - 1 + gameList.length) % gameList.length;
+                        } else if (key === 'down') {
+                            selectedIndex = (selectedIndex + 1) % gameList.length;
+                        } else if (key === 'a' || key === 'start') {
+                            showError = true;
+                            errorTimer = 180;
+                        } else if (key === 'l') {
+                            selectedIndex = 0;
+                        } else if (key === 'r') {
+                            selectedIndex = gameList.length - 1;
+                        }
+                    });
+                });
+                
+                // 开始动画
+                function animate() {
+                    if (window.gameBoyAppLoaded) return; // ES模块已加载，停止回退动画
+                    drawMenu();
+                    requestAnimationFrame(animate);
+                }
+                
+                // 先绘制一帧
+                drawMenu();
+                
+                // 开启电源灯
+                document.getElementById('power-led').classList.add('on');
+                
+                // 延迟启动动画，让ES模块有机会接管
+                setTimeout(function() {
+                    // 检查ES模块是否已加载
+                    if (!window.gameBoyAppLoaded) {
+                        fallbackActive = true;
+                        animate();
+                    }
+                }, 200);
+            });
+        })();
+    </script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

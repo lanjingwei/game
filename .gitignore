@@ -1,0 +1,7 @@
+# 本地服务器文件
+server.js
+启动游戏.bat
+
+# 系统文件
+.DS_Store
+Thumbs.db

@@ -1,0 +1,724 @@
+/* 基础重置和字体 */
+@font-face {
+    font-family: 'PixelFont';
+    src: local('Press Start 2P'), local('PressStart2P-Regular');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    /* 透明紫配色 */
+    --shell-primary: linear-gradient(145deg, #9b6dff 0%, #7b4cdb 50%, #5a2ea8 100%);
+    --shell-secondary: #6b3cbd;
+    --shell-highlight: rgba(255, 255, 255, 0.4);
+    --shell-shadow: rgba(40, 20, 80, 0.8);
+    --shell-inner: #4a2090;
+    --shell-transparency: 0.85;
+}
+
+/* 经典灰配色 */
+.gameboy.gray {
+    --shell-primary: linear-gradient(145deg, #d0d0d8 0%, #a8a8b0 50%, #888890 100%);
+    --shell-secondary: #909098;
+    --shell-highlight: rgba(255, 255, 255, 0.5);
+    --shell-shadow: rgba(50, 50, 60, 0.6);
+    --shell-inner: #707078;
+    --shell-transparency: 1;
+}
+
+/* 青柠绿配色 */
+.gameboy.lime {
+    --shell-primary: linear-gradient(145deg, #c8ff6d 0%, #9edb4c 50%, #6ea828 100%);
+    --shell-secondary: #7ebd3d;
+    --shell-highlight: rgba(255, 255, 255, 0.45);
+    --shell-shadow: rgba(40, 80, 20, 0.7);
+    --shell-inner: #509020;
+    --shell-transparency: 0.88;
+}
+
+/* 莓果红配色 */
+.gameboy.berry {
+    --shell-primary: linear-gradient(145deg, #ff6d9b 0%, #db4c7b 50%, #a8285a 100%);
+    --shell-secondary: #bd3d6e;
+    --shell-highlight: rgba(255, 255, 255, 0.4);
+    --shell-shadow: rgba(80, 20, 40, 0.8);
+    --shell-inner: #902050;
+    --shell-transparency: 0.87;
+}
+
+/* 青蓝配色 */
+.gameboy.teal {
+    --shell-primary: linear-gradient(145deg, #6dffdb 0%, #4cdbb8 50%, #28a890 100%);
+    --shell-secondary: #3dbd9e;
+    --shell-highlight: rgba(255, 255, 255, 0.45);
+    --shell-shadow: rgba(20, 80, 60, 0.7);
+    --shell-inner: #209078;
+    --shell-transparency: 0.88;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* 掌机主体 */
+.gameboy {
+    width: 320px;
+    height: 540px;
+    background: var(--shell-primary);
+    border-radius: 20px 20px 60px 60px;
+    position: relative;
+    box-shadow: 
+        /* 外部大阴影 */
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        /* 外部立体感 */
+        0 10px 30px var(--shell-shadow),
+        /* 内部高光边缘 */
+        inset 2px 2px 4px var(--shell-highlight),
+        /* 内部阴影边缘 */
+        inset -2px -2px 4px var(--shell-shadow),
+        /* 顶部高光条 */
+        inset 0 3px 0 var(--shell-highlight);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+/* 透明效果叠加层 */
+.gameboy::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    background: 
+        linear-gradient(180deg, 
+            rgba(255,255,255,0.15) 0%, 
+            transparent 30%,
+            transparent 70%,
+            rgba(0,0,0,0.1) 100%);
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* 顶部区域 */
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px;
+    margin-bottom: 10px;
+}
+
+/* 肩键 */
+.shoulder-btn {
+    width: 50px;
+    height: 18px;
+    background: linear-gradient(180deg, #505058 0%, #383840 50%, #282830 100%);
+    border: none;
+    border-radius: 4px 4px 8px 8px;
+    color: #888;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    box-shadow:
+        0 3px 6px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        inset 0 -1px 2px rgba(0,0,0,0.3);
+    transition: all 0.05s ease;
+}
+
+.shoulder-btn:active,
+.shoulder-btn.pressed {
+    transform: translateY(2px);
+    box-shadow:
+        0 1px 3px rgba(0,0,0,0.4),
+        inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* 顶部装饰 */
+.top-decoration {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-text {
+    font-size: 9px;
+    font-weight: bold;
+    color: var(--shell-inner);
+    text-shadow: 0 1px 0 var(--shell-highlight);
+    letter-spacing: 1px;
+}
+
+.color-text {
+    color: #ff4444;
+    font-style: italic;
+}
+
+/* 螺丝孔 */
+.screw {
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle at 30% 30%, #666, #333);
+    border-radius: 50%;
+    box-shadow:
+        inset 1px 1px 2px rgba(0,0,0,0.5),
+        inset -1px -1px 1px rgba(255,255,255,0.1);
+    position: relative;
+}
+
+.screw::after {
+    content: '+';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #222;
+    font-size: 8px;
+    font-weight: bold;
+}
+
+/* 屏幕区域 */
+.screen-area {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.screen-bezel {
+    background: linear-gradient(180deg, #282830 0%, #1a1a20 100%);
+    padding: 12px 15px 8px;
+    border-radius: 8px;
+    box-shadow:
+        inset 2px 2px 8px rgba(0,0,0,0.8),
+        0 2px 4px var(--shell-shadow);
+}
+
+/* 电源指示灯 */
+.power-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 6px;
+    padding-left: 5px;
+}
+
+.led {
+    width: 8px;
+    height: 8px;
+    background: #333;
+    border-radius: 50%;
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+}
+
+.led.on {
+    background: radial-gradient(circle at 30% 30%, #ff4444, #aa0000);
+    box-shadow: 
+        0 0 8px #ff0000,
+        0 0 16px rgba(255,0,0,0.5),
+        inset 1px 1px 2px rgba(255,255,255,0.3);
+}
+
+.power-indicator span {
+    font-size: 7px;
+    color: #666;
+    letter-spacing: 1px;
+}
+
+/* 屏幕框架 */
+.screen-frame {
+    background: #0a0a10;
+    padding: 4px;
+    border-radius: 4px;
+    box-shadow:
+        inset 3px 3px 10px rgba(0,0,0,0.9),
+        inset -1px -1px 3px rgba(255,255,255,0.05);
+}
+
+.screen-glass {
+    position: relative;
+    background: #111;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+#game-canvas {
+    display: block;
+    width: 240px;
+    height: 216px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background: #0f380f;
+}
+
+/* 屏幕反光效果 */
+.screen-reflection {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.1) 0%,
+        transparent 40%,
+        transparent 60%,
+        rgba(255,255,255,0.03) 100%
+    );
+    pointer-events: none;
+}
+
+/* 屏幕底部标签 */
+.screen-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 6px;
+    padding-left: 5px;
+    font-size: 6px;
+    color: #555;
+    letter-spacing: 0.5px;
+}
+
+.dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+}
+
+.dot.red { background: #e53935; }
+.dot.orange { background: #fb8c00; }
+.dot.green { background: #43a047; }
+.dot.blue { background: #1e88e5; }
+
+/* 品牌标识 */
+.brand-logo {
+    text-align: center;
+    margin: 5px 0;
+}
+
+.nintendo-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 11px;
+    font-style: italic;
+    color: var(--shell-inner);
+    text-shadow: 0 1px 0 var(--shell-highlight);
+    letter-spacing: 2px;
+}
+
+.model-text {
+    display: none;
+}
+
+/* 控制区域 */
+.controls-area {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    margin-top: auto;
+}
+
+/* D-Pad容器 */
+.dpad-container {
+    width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* D-Pad十字键 */
+.dpad {
+    width: 75px;
+    height: 75px;
+    position: relative;
+    background: linear-gradient(145deg, #2a2a32 0%, #1a1a20 100%);
+    border-radius: 50%;
+    box-shadow:
+        0 4px 8px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+.dpad-btn {
+    position: absolute;
+    background: linear-gradient(180deg, #3a3a42 0%, #2a2a32 50%, #1a1a22 100%);
+    border: none;
+    cursor: pointer;
+    transition: all 0.05s ease;
+}
+
+.dpad-btn.up,
+.dpad-btn.down {
+    width: 24px;
+    height: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.dpad-btn.up {
+    top: 2px;
+    border-radius: 4px 4px 0 0;
+    box-shadow:
+        inset 0 2px 0 rgba(255,255,255,0.15),
+        inset 0 -1px 3px rgba(0,0,0,0.3);
+}
+
+.dpad-btn.down {
+    bottom: 2px;
+    border-radius: 0 0 4px 4px;
+    box-shadow:
+        inset 0 1px 3px rgba(0,0,0,0.3),
+        inset 0 -2px 0 rgba(255,255,255,0.1);
+}
+
+.dpad-btn.left,
+.dpad-btn.right {
+    width: 28px;
+    height: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.dpad-btn.left {
+    left: 2px;
+    border-radius: 4px 0 0 4px;
+    box-shadow:
+        inset 2px 0 0 rgba(255,255,255,0.15),
+        inset -1px 0 3px rgba(0,0,0,0.3);
+}
+
+.dpad-btn.right {
+    right: 2px;
+    border-radius: 0 4px 4px 0;
+    box-shadow:
+        inset 1px 0 3px rgba(0,0,0,0.3),
+        inset -2px 0 0 rgba(255,255,255,0.1);
+}
+
+.dpad-btn:active,
+.dpad-btn.pressed {
+    background: linear-gradient(180deg, #2a2a32 0%, #1a1a22 100%);
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+}
+
+.dpad-center {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(145deg, #3a3a42, #2a2a32);
+    border-radius: 4px;
+}
+
+/* A/B按钮 */
+.ab-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ab-row {
+    display: flex;
+    gap: 10px;
+    transform: rotate(-25deg);
+}
+
+.btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.action-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 0;
+    position: relative;
+    transition: all 0.05s ease;
+}
+
+.a-btn {
+    background: linear-gradient(145deg, #c62828 0%, #8e0000 100%);
+    box-shadow:
+        0 4px 8px rgba(0,0,0,0.4),
+        0 2px 4px rgba(142,0,0,0.3),
+        inset 2px 2px 4px rgba(255,100,100,0.3),
+        inset -2px -2px 4px rgba(0,0,0,0.3);
+}
+
+.b-btn {
+    background: linear-gradient(145deg, #2e7d32 0%, #1b5e20 100%);
+    box-shadow:
+        0 4px 8px rgba(0,0,0,0.4),
+        0 2px 4px rgba(27,94,32,0.3),
+        inset 2px 2px 4px rgba(100,200,100,0.3),
+        inset -2px -2px 4px rgba(0,0,0,0.3);
+}
+
+.action-btn:active,
+.action-btn.pressed {
+    transform: translateY(3px);
+    box-shadow:
+        0 1px 3px rgba(0,0,0,0.4),
+        inset 2px 2px 6px rgba(0,0,0,0.4);
+}
+
+.btn-label {
+    font-size: 9px;
+    color: var(--shell-inner);
+    margin-top: 4px;
+    font-weight: bold;
+    text-shadow: 0 1px 0 var(--shell-highlight);
+}
+
+/* Start/Select按钮 */
+.function-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 15px 0 10px;
+    transform: rotate(-25deg);
+    margin-left: 30px;
+}
+
+.func-btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.func-btn {
+    width: 35px;
+    height: 12px;
+    background: linear-gradient(180deg, #606068 0%, #404048 100%);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow:
+        0 3px 5px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        inset 0 -1px 2px rgba(0,0,0,0.3);
+    transition: all 0.05s ease;
+}
+
+.func-btn:active,
+.func-btn.pressed {
+    transform: translateY(2px);
+    box-shadow:
+        0 1px 2px rgba(0,0,0,0.4),
+        inset 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.func-label {
+    font-size: 7px;
+    color: var(--shell-inner);
+    margin-top: 4px;
+    font-weight: bold;
+    text-shadow: 0 1px 0 var(--shell-highlight);
+    letter-spacing: 0.5px;
+}
+
+/* 扬声器 */
+.speaker-area {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
+    margin-top: 10px;
+}
+
+.speaker-grille {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 4px;
+    transform: rotate(-25deg);
+}
+
+.speaker-hole {
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(145deg, #1a1a20, #2a2a30);
+    border-radius: 50%;
+    box-shadow:
+        inset 1px 1px 3px rgba(0,0,0,0.6),
+        0 1px 0 var(--shell-highlight);
+}
+
+/* 底部螺丝 */
+.bottom-screws {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 25px;
+    margin-top: auto;
+}
+
+/* 配色选择器 */
+.color-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.1);
+    padding: 10px 20px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+}
+
+.color-picker span {
+    color: #aaa;
+    font-size: 12px;
+}
+
+.color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+.color-option.active {
+    border-color: #fff;
+    box-shadow: 0 0 15px rgba(255,255,255,0.3);
+}
+
+.color-option.purple {
+    background: linear-gradient(145deg, #9b6dff, #5a2ea8);
+}
+
+.color-option.gray {
+    background: linear-gradient(145deg, #d0d0d8, #888890);
+}
+
+.color-option.lime {
+    background: linear-gradient(145deg, #c8ff6d, #6ea828);
+}
+
+.color-option.berry {
+    background: linear-gradient(145deg, #ff6d9b, #a8285a);
+}
+
+.color-option.teal {
+    background: linear-gradient(145deg, #6dffdb, #28a890);
+}
+
+/* 控制说明 */
+.controls-help {
+    background: rgba(255,255,255,0.05);
+    padding: 15px 25px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.controls-help h3 {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 10px;
+    font-weight: normal;
+}
+
+.key-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    color: #666;
+    font-size: 11px;
+}
+
+kbd {
+    background: linear-gradient(180deg, #444, #333);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 10px;
+    color: #ddd;
+    box-shadow: 
+        0 2px 0 #222,
+        inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+/* 响应式设计 */
+@media (max-width: 400px) {
+    .gameboy {
+        width: 280px;
+        height: 480px;
+        padding: 12px;
+    }
+    
+    #game-canvas {
+        width: 200px;
+        height: 180px;
+    }
+    
+    .dpad {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .action-btn {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* 动画效果 */
+@keyframes powerOn {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+@keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+.screen-glass::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255,255,255,0.03);
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+}
