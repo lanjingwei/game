@@ -12,37 +12,19 @@
         <div class="gameboy" id="gameboy">
             <!-- 顶部区域 -->
             <div class="top-section">
-                <!-- 左肩键 L -->
-                <button class="shoulder-btn left" id="btn-l" data-key="l">L</button>
-                <!-- 装饰性元素 -->
                 <div class="top-decoration">
-                    <div class="screw top-left"></div>
                     <div class="brand-text">GAME BOY <span class="color-text">COLOR</span></div>
-                    <div class="screw top-right"></div>
                 </div>
-                <!-- 右肩键 R -->
-                <button class="shoulder-btn right" id="btn-r" data-key="r">R</button>
             </div>
 
             <!-- 屏幕区域 -->
             <div class="screen-area">
                 <div class="screen-bezel">
-                    <div class="power-indicator">
-                        <div class="led" id="power-led"></div>
-                        <span>POWER</span>
-                    </div>
                     <div class="screen-frame">
                         <div class="screen-glass">
                             <canvas id="game-canvas" width="320" height="288"></canvas>
                             <div class="screen-reflection"></div>
                         </div>
-                    </div>
-                    <div class="screen-label">
-                        <span class="dot red"></span>
-                        <span class="dot orange"></span>
-                        <span class="dot green"></span>
-                        <span class="dot blue"></span>
-                        BATTERY
                     </div>
                 </div>
             </div>
@@ -50,7 +32,6 @@
             <!-- 品牌标识 -->
             <div class="brand-logo">
                 <span class="nintendo-text">Nintendo</span>
-                <span class="model-text">GAME BOY</span>
             </div>
 
             <!-- 控制区域 -->
@@ -70,11 +51,11 @@
                 <div class="ab-buttons">
                     <div class="ab-row">
                         <div class="btn-wrapper">
-                            <button class="action-btn b-btn" id="btn-b" data-key="b">B</button>
+                            <button class="action-btn b-btn" id="btn-b" data-key="b"></button>
                             <span class="btn-label">B</span>
                         </div>
                         <div class="btn-wrapper">
-                            <button class="action-btn a-btn" id="btn-a" data-key="a">A</button>
+                            <button class="action-btn a-btn" id="btn-a" data-key="a"></button>
                             <span class="btn-label">A</span>
                         </div>
                     </div>
@@ -103,35 +84,6 @@
                     <div class="speaker-hole"></div>
                     <div class="speaker-hole"></div>
                 </div>
-            </div>
-
-            <!-- 底部装饰螺丝 -->
-            <div class="bottom-screws">
-                <div class="screw bottom-left"></div>
-                <div class="screw bottom-right"></div>
-            </div>
-        </div>
-
-        <!-- 配色选择器 -->
-        <div class="color-picker">
-            <span>外壳配色：</span>
-            <button class="color-option purple active" data-color="purple" title="透明紫"></button>
-            <button class="color-option gray" data-color="gray" title="经典灰"></button>
-            <button class="color-option lime" data-color="lime" title="青柠绿"></button>
-            <button class="color-option berry" data-color="berry" title="莓果红"></button>
-            <button class="color-option teal" data-color="teal" title="青蓝色"></button>
-        </div>
-
-        <!-- 控制说明 -->
-        <div class="controls-help">
-            <h3>键盘控制</h3>
-            <div class="key-list">
-                <span><kbd>↑↓←→</kbd> 方向</span>
-                <span><kbd>Z</kbd> A键</span>
-                <span><kbd>X</kbd> B键</span>
-                <span><kbd>Enter</kbd> Start</span>
-                <span><kbd>Shift</kbd> Select</span>
-                <span><kbd>Q</kbd>/<kbd>E</kbd> L/R</span>
             </div>
         </div>
     </div>
@@ -302,9 +254,6 @@
                 
                 // 先绘制一帧
                 drawMenu();
-                
-                // 开启电源灯
-                document.getElementById('power-led').classList.add('on');
                 
                 // 延迟启动动画，让ES模块有机会接管
                 setTimeout(function() {

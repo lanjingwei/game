@@ -133,13 +133,9 @@ class GameBoyApp {
 
     init() {
         this.setupControls();
-        this.setupColorPicker();
         
         // 启动游戏循环
         requestAnimationFrame(this.gameLoop.bind(this));
-        
-        // 开启电源灯
-        document.getElementById('power-led').classList.add('on');
     }
 
     /**
