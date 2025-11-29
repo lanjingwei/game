@@ -38,11 +38,14 @@ body {
     justify-content: center;
 }
 
-/* 掌机主体 - 自适应大小 */
+/* 掌机主体 - 固定比例，电脑和手机一致 */
 .gameboy {
-    width: min(95vw, 420px);
-    height: min(95vh, 750px);
-    height: min(95dvh, 750px);
+    width: min(92vw, 380px);
+    height: min(92vh, 680px);
+    height: min(92dvh, 680px);
+    max-width: 380px;
+    max-height: 680px;
+    aspect-ratio: 380 / 680;
     background: var(--shell-primary);
     border-radius: 25px 25px 80px 80px;
     position: relative;
@@ -298,7 +301,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -10px;
+    margin-left: -15px;
+    margin-top: 5px;
 }
 
 /* D-Pad十字键 - 1.5倍大小 (165px) */
@@ -463,13 +467,13 @@ body {
     flex-direction: column;
     align-items: flex-end;
     margin-right: -15px;
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
 .ab-row {
     display: flex;
-    gap: 12px;
-    transform: rotate(-20deg);
+    gap: 20px;
+    transform: rotate(-25deg);
 }
 
 .btn-wrapper {
@@ -497,7 +501,6 @@ body {
         inset 3px 3px 6px rgba(255,120,120,0.35),
         inset -3px -3px 6px rgba(0,0,0,0.35),
         0 0 0 3px #6d0000;
-    margin-left: 20px;
 }
 
 .b-btn {
@@ -529,11 +532,11 @@ body {
 /* Start/Select按钮 */
 .function-buttons {
     position: absolute;
-    bottom: 65px;
-    left: 75%;
-    transform: translateX(-50%) rotate(-20deg);
+    bottom: 75px;
+    left: 58%;
+    transform: translateX(calc(-50% + 65px)) rotate(-25deg);
     display: flex;
-    gap: 40px;
+    gap: 35px;
 }
 
 .func-btn-wrapper {
@@ -599,6 +602,41 @@ body {
 /* 隐藏控制说明 */
 .controls-help {
     display: none;
+}
+
+/* 开发者信息 */
+.developer-info {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: transparent;
+    text-shadow: 
+        0 1px 1px rgba(255,255,255,0.4),
+        0 -1px 1px rgba(0,0,0,0.2);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.dev-icon {
+    font-size: 12px;
+    color: transparent;
+    text-shadow: 
+        0 1px 1px rgba(255,255,255,0.5),
+        0 -1px 1px rgba(0,0,0,0.25);
+}
+
+.dev-text {
+    color: transparent;
+    text-shadow: 
+        0 1px 1px rgba(255,255,255,0.4),
+        0 -1px 1px rgba(0,0,0,0.2);
 }
 
 /* 扫描线动画 */
