@@ -192,11 +192,10 @@ body {
     background: linear-gradient(180deg, #1a1a24 0%, #0f0f18 100%);
     padding: 15px 18px 12px;
     border-radius: 12px;
+    max-width: calc(100% - 5px);
     box-shadow:
         inset 3px 3px 12px rgba(0,0,0,0.9),
         0 3px 6px var(--shell-shadow);
-    max-width: calc(100% - 20px);
-    margin: 0 auto;
 }
 
 /* 隐藏电源指示灯 */
@@ -228,7 +227,6 @@ body {
 #game-canvas {
     display: block;
     width: 320px;
-    max-width: 100%;
     height: 288px;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
@@ -304,7 +302,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -20px;
+    margin-left: -23px;
     margin-top: 5px;
 }
 
