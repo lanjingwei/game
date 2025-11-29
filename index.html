@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- 手机预览按钮（仅电脑端显示） -->
+    <button class="phone-preview-btn" id="phone-preview-btn" title="手机预览">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12" y2="18"></line>
+        </svg>
+        <span>手机预览</span>
+    </button>
+
     <div class="container">
         <!-- 掌机主体 -->
         <div class="gameboy" id="gameboy">
@@ -277,5 +286,47 @@
         })();
     </script>
     <script type="module" src="js/main.js"></script>
+    
+    <!-- 手机预览功能 -->
+    <script>
+        (function() {
+            var previewBtn = document.getElementById('phone-preview-btn');
+            var isPreviewMode = false;
+            var phoneFrame = null;
+            
+            if (previewBtn) {
+                previewBtn.addEventListener('click', function() {
+                    isPreviewMode = !isPreviewMode;
+                    
+                    if (isPreviewMode) {
+                        // 创建手机框架
+                        phoneFrame = document.createElement('div');
+                        phoneFrame.className = 'phone-frame-overlay';
+                        phoneFrame.innerHTML = '<div class="phone-frame">' +
+                            '<div class="phone-notch"></div>' +
+                            '<iframe src="' + window.location.href + '"></iframe>' +
+                            '<div class="phone-home-bar"></div>' +
+                        '</div>' +
+                        '<button class="close-preview-btn">✕ 关闭预览</button>';
+                        document.body.appendChild(phoneFrame);
+                        
+                        phoneFrame.querySelector('.close-preview-btn').addEventListener('click', function() {
+                            document.body.removeChild(phoneFrame);
+                            isPreviewMode = false;
+                            previewBtn.querySelector('span').textContent = '手机预览';
+                        });
+                        
+                        previewBtn.querySelector('span').textContent = '退出预览';
+                    } else {
+                        if (phoneFrame) {
+                            document.body.removeChild(phoneFrame);
+                            phoneFrame = null;
+                        }
+                        previewBtn.querySelector('span').textContent = '手机预览';
+                    }
+                });
+            }
+        })();
+    </script>
 </body>
 </html>
