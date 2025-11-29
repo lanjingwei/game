@@ -80,13 +80,72 @@ body {
     z-index: 100;
 }
 
-/* 顶部区域 - 简化 */
+/* 顶部区域 */
 .top-section {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    padding: 5px;
-    margin-bottom: 10px;
+    padding: 8px 15px;
+    margin-bottom: 5px;
+}
+
+/* 左上角指示灯 */
+.power-led-area {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.power-led {
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle at 30% 30%, #44ff44, #00aa00);
+    border-radius: 50%;
+    box-shadow: 
+        0 0 8px #00ff00,
+        0 0 16px rgba(0,255,0,0.5),
+        inset 1px 1px 2px rgba(255,255,255,0.3);
+    transition: all 0.15s ease;
+}
+
+.power-led.error {
+    background: radial-gradient(circle at 30% 30%, #ff4444, #aa0000);
+    box-shadow: 
+        0 0 8px #ff0000,
+        0 0 16px rgba(255,0,0,0.5),
+        inset 1px 1px 2px rgba(255,255,255,0.3);
+}
+
+.power-led.blink {
+    animation: led-blink 0.3s ease-in-out;
+}
+
+@keyframes led-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.power-led-label {
+    font-size: 7px;
+    color: #606068;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* 右上角扬声器孔 */
+.top-speaker {
+    display: flex;
+    gap: 6px;
+}
+
+.top-speaker-hole {
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(145deg, #18181e, #252530);
+    border-radius: 50%;
+    box-shadow:
+        inset 1px 1px 3px rgba(0,0,0,0.8),
+        0 1px 0 rgba(255,255,255,0.3);
 }
 
 /* 隐藏 L/R 肩键 */
@@ -102,7 +161,7 @@ body {
 }
 
 .brand-text {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
     color: #505058;
     text-shadow: 0 1px 0 rgba(255,255,255,0.5);
@@ -167,8 +226,13 @@ body {
     height: 288px;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    -webkit-image-rendering: pixelated;
     -ms-interpolation-mode: nearest-neighbor;
     background: #0f380f;
+    /* 确保1:1像素映射 */
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 /* 屏幕反光效果 */
@@ -220,33 +284,35 @@ body {
 .controls-area {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 15px 25px;
+    align-items: flex-start;
+    padding: 15px 20px 10px 20px;
     flex: 1;
     min-height: 0;
+    position: relative;
 }
 
-/* D-Pad容器 - 更大 */
+/* D-Pad容器 - 1.5倍大小 */
 .dpad-container {
-    width: 130px;
-    height: 130px;
+    width: 180px;
+    height: 180px;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: -10px;
 }
 
-/* D-Pad十字键 - 更大更逼真 */
+/* D-Pad十字键 - 1.5倍大小 (165px) */
 .dpad {
-    width: 110px;
-    height: 110px;
+    width: 165px;
+    height: 165px;
     position: relative;
     background: radial-gradient(circle at 50% 50%, #2a2a32 0%, #1a1a22 100%);
     border-radius: 50%;
     box-shadow:
-        0 8px 20px rgba(0,0,0,0.6),
-        0 4px 10px rgba(0,0,0,0.4),
-        inset 0 2px 3px rgba(255,255,255,0.1),
-        inset 0 -2px 3px rgba(0,0,0,0.3);
+        0 10px 25px rgba(0,0,0,0.6),
+        0 5px 12px rgba(0,0,0,0.4),
+        inset 0 3px 4px rgba(255,255,255,0.1),
+        inset 0 -3px 4px rgba(0,0,0,0.3);
 }
 
 /* 十字键按钮基础样式 */
@@ -258,110 +324,110 @@ body {
     transition: all 0.08s ease;
 }
 
-/* 上下按钮 */
+/* 上下按钮 - 1.5倍 */
 .dpad-btn.up,
 .dpad-btn.down {
-    width: 34px;
-    height: 40px;
+    width: 51px;
+    height: 60px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .dpad-btn.up {
-    top: 4px;
-    border-radius: 8px 8px 2px 2px;
+    top: 6px;
+    border-radius: 12px 12px 3px 3px;
     box-shadow:
-        inset 0 3px 0 rgba(255,255,255,0.2),
-        inset 0 -2px 4px rgba(0,0,0,0.4),
-        0 -2px 4px rgba(0,0,0,0.3);
+        inset 0 4px 0 rgba(255,255,255,0.2),
+        inset 0 -3px 6px rgba(0,0,0,0.4),
+        0 -3px 6px rgba(0,0,0,0.3);
 }
 
 .dpad-btn.up::after {
     content: '';
     position: absolute;
-    top: 10px;
+    top: 15px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 10px solid rgba(80,80,90,0.8);
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 15px solid rgba(80,80,90,0.8);
 }
 
 .dpad-btn.down {
-    bottom: 4px;
-    border-radius: 2px 2px 8px 8px;
+    bottom: 6px;
+    border-radius: 3px 3px 12px 12px;
     box-shadow:
-        inset 0 2px 4px rgba(0,0,0,0.4),
-        inset 0 -3px 0 rgba(255,255,255,0.1),
-        0 2px 4px rgba(0,0,0,0.3);
+        inset 0 3px 6px rgba(0,0,0,0.4),
+        inset 0 -4px 0 rgba(255,255,255,0.1),
+        0 3px 6px rgba(0,0,0,0.3);
 }
 
 .dpad-btn.down::after {
     content: '';
     position: absolute;
-    bottom: 10px;
+    bottom: 15px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 10px solid rgba(80,80,90,0.8);
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 15px solid rgba(80,80,90,0.8);
 }
 
-/* 左右按钮 */
+/* 左右按钮 - 1.5倍 */
 .dpad-btn.left,
 .dpad-btn.right {
-    width: 40px;
-    height: 34px;
+    width: 60px;
+    height: 51px;
     top: 50%;
     transform: translateY(-50%);
 }
 
 .dpad-btn.left {
-    left: 4px;
-    border-radius: 8px 2px 2px 8px;
+    left: 6px;
+    border-radius: 12px 3px 3px 12px;
     box-shadow:
-        inset 3px 0 0 rgba(255,255,255,0.2),
-        inset -2px 0 4px rgba(0,0,0,0.4),
-        -2px 0 4px rgba(0,0,0,0.3);
+        inset 4px 0 0 rgba(255,255,255,0.2),
+        inset -3px 0 6px rgba(0,0,0,0.4),
+        -3px 0 6px rgba(0,0,0,0.3);
 }
 
 .dpad-btn.left::after {
     content: '';
     position: absolute;
-    left: 10px;
+    left: 15px;
     top: 50%;
     transform: translateY(-50%);
     width: 0;
     height: 0;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-right: 10px solid rgba(80,80,90,0.8);
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-right: 15px solid rgba(80,80,90,0.8);
 }
 
 .dpad-btn.right {
-    right: 4px;
-    border-radius: 2px 8px 8px 2px;
+    right: 6px;
+    border-radius: 3px 12px 12px 3px;
     box-shadow:
-        inset 2px 0 4px rgba(0,0,0,0.4),
-        inset -3px 0 0 rgba(255,255,255,0.1),
-        2px 0 4px rgba(0,0,0,0.3);
+        inset 3px 0 6px rgba(0,0,0,0.4),
+        inset -4px 0 0 rgba(255,255,255,0.1),
+        3px 0 6px rgba(0,0,0,0.3);
 }
 
 .dpad-btn.right::after {
     content: '';
     position: absolute;
-    right: 10px;
+    right: 15px;
     top: 50%;
     transform: translateY(-50%);
     width: 0;
     height: 0;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-left: 10px solid rgba(80,80,90,0.8);
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 15px solid rgba(80,80,90,0.8);
 }
 
 /* 按下效果 */
@@ -376,32 +442,34 @@ body {
     opacity: 0.5;
 }
 
-/* 十字键中心 */
+/* 十字键中心 - 1.5倍 */
 .dpad-center {
     position: absolute;
-    width: 36px;
-    height: 36px;
+    width: 54px;
+    height: 54px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: linear-gradient(145deg, #404048 0%, #2a2a32 50%, #1a1a22 100%);
-    border-radius: 6px;
+    border-radius: 8px;
     box-shadow:
-        inset 1px 1px 2px rgba(255,255,255,0.15),
-        inset -1px -1px 2px rgba(0,0,0,0.3);
+        inset 2px 2px 3px rgba(255,255,255,0.15),
+        inset -2px -2px 3px rgba(0,0,0,0.3);
 }
 
 /* A/B按钮 */
 .ab-buttons {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: flex-end;
+    margin-right: -15px;
+    margin-top: 20px;
 }
 
 .ab-row {
     display: flex;
-    gap: 15px;
-    transform: rotate(-25deg);
+    gap: 12px;
+    transform: rotate(-20deg);
 }
 
 .btn-wrapper {
@@ -411,8 +479,8 @@ body {
 }
 
 .action-btn {
-    width: 52px;
-    height: 52px;
+    width: 58px;
+    height: 58px;
     border-radius: 50%;
     border: none;
     cursor: pointer;
@@ -429,6 +497,7 @@ body {
         inset 3px 3px 6px rgba(255,120,120,0.35),
         inset -3px -3px 6px rgba(0,0,0,0.35),
         0 0 0 3px #6d0000;
+    margin-left: 20px;
 }
 
 .b-btn {
@@ -459,12 +528,12 @@ body {
 
 /* Start/Select按钮 */
 .function-buttons {
+    position: absolute;
+    bottom: 65px;
+    left: 75%;
+    transform: translateX(-50%) rotate(-20deg);
     display: flex;
-    justify-content: center;
     gap: 40px;
-    margin: 10px 0;
-    transform: rotate(-25deg);
-    margin-left: 40px;
 }
 
 .func-btn-wrapper {
@@ -474,16 +543,16 @@ body {
 }
 
 .func-btn {
-    width: 45px;
-    height: 14px;
-    background: linear-gradient(180deg, #707078 0%, #505058 50%, #404048 100%);
+    width: 40px;
+    height: 12px;
+    background: linear-gradient(180deg, #606068 0%, #454550 50%, #353540 100%);
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     box-shadow:
-        0 4px 8px rgba(0,0,0,0.5),
-        inset 0 2px 0 rgba(255,255,255,0.25),
-        inset 0 -2px 3px rgba(0,0,0,0.4);
+        0 3px 6px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        inset 0 -1px 2px rgba(0,0,0,0.4);
     transition: all 0.08s ease;
 }
 
@@ -496,38 +565,25 @@ body {
 }
 
 .func-label {
-    font-size: 8px;
-    color: #505058;
-    margin-top: 5px;
+    font-size: 7px;
+    color: #606068;
+    margin-top: 4px;
     font-weight: bold;
     text-shadow: 0 1px 0 rgba(255,255,255,0.5);
     letter-spacing: 1px;
 }
 
-/* 扬声器 */
+/* 隐藏底部扬声器区域 - 移到顶部 */
 .speaker-area {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 40px;
-    margin-top: 5px;
+    display: none;
 }
 
 .speaker-grille {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 6px;
-    transform: rotate(-25deg);
+    display: none;
 }
 
 .speaker-hole {
-    width: 8px;
-    height: 8px;
-    background: linear-gradient(145deg, #18181e, #252530);
-    border-radius: 50%;
-    box-shadow:
-        inset 2px 2px 4px rgba(0,0,0,0.7),
-        0 1px 0 rgba(255,255,255,0.3);
+    display: none;
 }
 
 /* 隐藏底部螺丝 */

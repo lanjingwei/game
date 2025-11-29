@@ -100,12 +100,17 @@ class GameBoyApp {
     constructor() {
         // 画布设置
         this.canvas = document.getElementById('game-canvas');
-        this.ctx = this.canvas.getContext('2d');
+        this.ctx = this.canvas.getContext('2d', { alpha: false });
         this.width = 320;
         this.height = 288;
+        this.centerX = 160; // 预计算中心点，避免小数
+        this.centerY = 144;
         
         // 禁用抗锯齿，保持像素清晰
         this.ctx.imageSmoothingEnabled = false;
+        this.ctx.webkitImageSmoothingEnabled = false;
+        this.ctx.mozImageSmoothingEnabled = false;
+        this.ctx.msImageSmoothingEnabled = false;
 
         // 状态
         this.state = GameState.MENU;
@@ -326,6 +331,7 @@ class GameBoyApp {
                     if (this.currentGame.isGameOver) {
                         this.saveHighScore(gameList[this.selectedIndex].id, this.currentGame.score);
                         this.state = GameState.GAME_OVER;
+                        this.flashErrorLed(); // 指示灯闪烁红色
                         audio.playGameOver();
                     }
                 }
@@ -429,6 +435,33 @@ class GameBoyApp {
     }
 
     /**
+     * 游戏失败时指示灯闪烁红色三次
+     */
+    flashErrorLed() {
+        const led = document.querySelector('.power-led');
+        if (!led) return;
+
+        let count = 0;
+        const flash = () => {
+            if (count >= 6) {
+                // 闪烁结束，恢复绿色
+                led.classList.remove('error');
+                return;
+            }
+            
+            if (count % 2 === 0) {
+                led.classList.add('error');
+            } else {
+                led.classList.remove('error');
+            }
+            count++;
+            setTimeout(flash, 200);
+        };
+        
+        flash();
+    }
+
+    /**
      * 渲染
      */
     render() {
@@ -482,11 +515,11 @@ class GameBoyApp {
             this.ctx.fillRect(x - 10, y, 20, 20);
         }
 
-        // 标题
+        // 标题 - 使用整数坐标
         this.ctx.fillStyle = '#ffcc00';
         this.ctx.font = 'bold 20px monospace';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('GAME SELECT', this.width / 2, 25);
+        this.ctx.fillText('GAME SELECT', this.centerX, 25);
 
         // 游戏列表（滚动显示）
         const itemHeight = 30;
@@ -540,10 +573,10 @@ class GameBoyApp {
             this.ctx.fillText(game.name, 75, y + 5);
             
             // 序号
-            this.ctx.fillStyle = isSelected ? '#ffcc00' : '#555555';
-            this.ctx.font = '10px monospace';
+            this.ctx.fillStyle = isSelected ? '#ffcc00' : '#666666';
+            this.ctx.font = 'bold 12px monospace';
             this.ctx.textAlign = 'right';
-            this.ctx.fillText(`${index + 1}`, this.width - 20, y + 4);
+            this.ctx.fillText(`${index + 1}`, 300, y + 4);
         });
         
         this.ctx.restore();
@@ -551,22 +584,22 @@ class GameBoyApp {
         // 滚动指示器
         if (scrollOffset > 0) {
             this.ctx.fillStyle = '#888888';
-            this.ctx.font = '12px monospace';
+            this.ctx.font = 'bold 14px monospace';
             this.ctx.textAlign = 'center';
-            this.ctx.fillText('▲', this.width / 2, startY - 5);
+            this.ctx.fillText('▲', this.centerX, startY - 5);
         }
         if (scrollOffset < gameList.length - visibleItems) {
             this.ctx.fillStyle = '#888888';
-            this.ctx.font = '12px monospace';
+            this.ctx.font = 'bold 14px monospace';
             this.ctx.textAlign = 'center';
-            this.ctx.fillText('▼', this.width / 2, startY + visibleItems * itemHeight + 5);
+            this.ctx.fillText('▼', this.centerX, startY + visibleItems * itemHeight + 5);
         }
 
         // 底部提示
-        this.ctx.fillStyle = '#666666';
-        this.ctx.font = '12px monospace';
+        this.ctx.fillStyle = '#888888';
+        this.ctx.font = 'bold 13px monospace';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('↑↓选择  A确认  L/R快速切换', this.width / 2, this.height - 8);
+        this.ctx.fillText('↑↓选择  A确认  L/R快速切换', this.centerX, this.height - 8);
     }
 
     /**
@@ -580,22 +613,22 @@ class GameBoyApp {
         this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, this.width, this.height);
 
-        // 游戏名
+        // 游戏名 - 使用整数坐标
         const game = gameList[this.selectedIndex];
         this.ctx.fillStyle = '#ffcc00';
         this.ctx.font = 'bold 20px monospace';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText(game.name, this.width / 2, 50);
+        this.ctx.fillText(game.name, this.centerX, 50);
 
         // 难度标题
         this.ctx.fillStyle = '#ffffff';
-        this.ctx.font = '16px monospace';
-        this.ctx.fillText('选择难度', this.width / 2, 95);
+        this.ctx.font = 'bold 16px monospace';
+        this.ctx.fillText('选择难度', this.centerX, 95);
 
         // 难度选项
         const difficulties = Object.values(Difficulty);
         const boxWidth = 90;
-        const startX = (this.width - boxWidth * 3 - 20) / 2;
+        const startX = 15;
 
         difficulties.forEach((diff, index) => {
             const x = startX + index * (boxWidth + 10);
@@ -614,21 +647,21 @@ class GameBoyApp {
 
             // 文字
             this.ctx.fillStyle = isSelected ? '#ffffff' : '#888888';
-            this.ctx.font = '14px monospace';
+            this.ctx.font = 'bold 14px monospace';
             this.ctx.textAlign = 'center';
-            this.ctx.fillText(diff.name, x + boxWidth / 2, y + 32);
+            this.ctx.fillText(diff.name, x + 45, y + 32);
         });
 
         // 最高分
         const highScore = this.getHighScore(game.id);
-        this.ctx.fillStyle = '#aaaaaa';
-        this.ctx.font = '14px monospace';
-        this.ctx.fillText(`最高分: ${highScore}`, this.width / 2, 210);
+        this.ctx.fillStyle = '#cccccc';
+        this.ctx.font = 'bold 14px monospace';
+        this.ctx.fillText(`最高分: ${highScore}`, this.centerX, 210);
 
         // 底部提示
-        this.ctx.fillStyle = '#666666';
-        this.ctx.font = '14px monospace';
-        this.ctx.fillText('←→选择  A开始  B返回', this.width / 2, this.height - 15);
+        this.ctx.fillStyle = '#888888';
+        this.ctx.font = 'bold 14px monospace';
+        this.ctx.fillText('←→选择  A开始  B返回', this.centerX, this.height - 15);
     }
 
     /**
@@ -646,15 +679,15 @@ class GameBoyApp {
         this.ctx.lineWidth = 3;
         this.ctx.strokeRect(60, 100, 200, 90);
 
-        // 文字
+        // 文字 - 使用整数坐标确保清晰
         this.ctx.fillStyle = '#ffffff';
         this.ctx.font = 'bold 24px monospace';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('PAUSED', this.width / 2, 140);
+        this.ctx.fillText('PAUSED', this.centerX, 140);
 
-        this.ctx.fillStyle = '#aaaaaa';
-        this.ctx.font = '12px monospace';
-        this.ctx.fillText('START继续  B退出', this.width / 2, 175);
+        this.ctx.fillStyle = '#cccccc';
+        this.ctx.font = 'bold 14px monospace';
+        this.ctx.fillText('START继续  B退出', this.centerX, 175);
     }
 
     /**
@@ -672,28 +705,28 @@ class GameBoyApp {
         this.ctx.lineWidth = 3;
         this.ctx.strokeRect(40, 70, 240, 150);
 
-        // GAME OVER
+        // GAME OVER - 使用整数坐标
         this.ctx.fillStyle = '#ff4444';
         this.ctx.font = 'bold 28px monospace';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('GAME OVER', this.width / 2, 110);
+        this.ctx.fillText('GAME OVER', this.centerX, 110);
 
         // 分数
         this.ctx.fillStyle = '#ffffff';
-        this.ctx.font = '18px monospace';
-        this.ctx.fillText(`得分: ${this.currentGame?.score || 0}`, this.width / 2, 150);
+        this.ctx.font = 'bold 18px monospace';
+        this.ctx.fillText(`得分: ${this.currentGame?.score || 0}`, this.centerX, 150);
 
         // 最高分
         const gameId = gameList[this.selectedIndex].id;
         const highScore = this.getHighScore(gameId);
         this.ctx.fillStyle = '#ffcc00';
-        this.ctx.font = '16px monospace';
-        this.ctx.fillText(`最高: ${highScore}`, this.width / 2, 180);
+        this.ctx.font = 'bold 16px monospace';
+        this.ctx.fillText(`最高: ${highScore}`, this.centerX, 180);
 
         // 提示
-        this.ctx.fillStyle = '#aaaaaa';
-        this.ctx.font = '14px monospace';
-        this.ctx.fillText('A重玩  B返回菜单', this.width / 2, 210);
+        this.ctx.fillStyle = '#cccccc';
+        this.ctx.font = 'bold 14px monospace';
+        this.ctx.fillText('A重玩  B返回菜单', this.centerX, 210);
     }
 }
 

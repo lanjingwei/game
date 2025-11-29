@@ -12,8 +12,20 @@
         <div class="gameboy" id="gameboy">
             <!-- 顶部区域 -->
             <div class="top-section">
+                <!-- 左上角指示灯 -->
+                <div class="power-led-area">
+                    <div class="power-led"></div>
+                    <span class="power-led-label">POWER</span>
+                </div>
+                <!-- 中间品牌 -->
                 <div class="top-decoration">
                     <div class="brand-text">GAME BOY <span class="color-text">COLOR</span></div>
+                </div>
+                <!-- 右上角扬声器孔 -->
+                <div class="top-speaker">
+                    <div class="top-speaker-hole"></div>
+                    <div class="top-speaker-hole"></div>
+                    <div class="top-speaker-hole"></div>
                 </div>
             </div>
 
@@ -74,17 +86,6 @@
                 </div>
             </div>
 
-            <!-- 扬声器 -->
-            <div class="speaker-area">
-                <div class="speaker-grille">
-                    <div class="speaker-hole"></div>
-                    <div class="speaker-hole"></div>
-                    <div class="speaker-hole"></div>
-                    <div class="speaker-hole"></div>
-                    <div class="speaker-hole"></div>
-                    <div class="speaker-hole"></div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -93,8 +94,11 @@
         (function() {
             window.addEventListener('DOMContentLoaded', function() {
                 var canvas = document.getElementById('game-canvas');
-                var ctx = canvas.getContext('2d');
-                var width = 320, height = 288;
+                var ctx = canvas.getContext('2d', { alpha: false });
+                var width = 320, height = 288, centerX = 160;
+                
+                // 禁用抗锯齿
+                ctx.imageSmoothingEnabled = false;
                 
                 // 游戏列表
                 var gameList = [
@@ -124,11 +128,11 @@
                     ctx.fillStyle = gradient;
                     ctx.fillRect(0, 0, width, height);
                     
-                    // 标题
+                    // 标题 - 使用整数坐标
                     ctx.fillStyle = '#ffcc00';
                     ctx.font = 'bold 20px monospace';
                     ctx.textAlign = 'center';
-                    ctx.fillText('GAME SELECT', width / 2, 25);
+                    ctx.fillText('GAME SELECT', centerX, 25);
                     
                     // 游戏列表
                     var itemHeight = 28;
@@ -158,17 +162,17 @@
                         ctx.font = isSelected ? 'bold 14px monospace' : '14px monospace';
                         ctx.fillText(game.name, 75, y + 5);
                         
-                        ctx.fillStyle = isSelected ? '#ffcc00' : '#555555';
-                        ctx.font = '10px monospace';
+                        ctx.fillStyle = isSelected ? '#ffcc00' : '#666666';
+                        ctx.font = 'bold 12px monospace';
                         ctx.textAlign = 'right';
-                        ctx.fillText('' + (index + 1), width - 20, y + 4);
+                        ctx.fillText('' + (index + 1), 300, y + 4);
                     });
                     
                     // 底部提示
-                    ctx.fillStyle = '#666666';
-                    ctx.font = '12px monospace';
+                    ctx.fillStyle = '#888888';
+                    ctx.font = 'bold 13px monospace';
                     ctx.textAlign = 'center';
-                    ctx.fillText('↑↓选择  Z/Enter确认', width / 2, height - 8);
+                    ctx.fillText('↑↓选择  Z/Enter确认', centerX, height - 8);
                     
                     // 显示错误提示
                     if (showError) {
@@ -181,16 +185,16 @@
                         ctx.fillStyle = '#ff6b6b';
                         ctx.font = 'bold 16px monospace';
                         ctx.textAlign = 'center';
-                        ctx.fillText('⚠ 无法加载游戏', width / 2, 110);
+                        ctx.fillText('⚠ 无法加载游戏', centerX, 110);
                         
                         ctx.fillStyle = '#ffffff';
-                        ctx.font = '12px monospace';
-                        ctx.fillText('请使用本地服务器打开', width / 2, 140);
-                        ctx.fillText('不能直接双击HTML文件', width / 2, 160);
+                        ctx.font = 'bold 14px monospace';
+                        ctx.fillText('请使用本地服务器打开', centerX, 140);
+                        ctx.fillText('不能直接双击HTML文件', centerX, 160);
                         
-                        ctx.fillStyle = '#888888';
-                        ctx.font = '11px monospace';
-                        ctx.fillText('推荐: npx http-server', width / 2, 190);
+                        ctx.fillStyle = '#aaaaaa';
+                        ctx.font = 'bold 12px monospace';
+                        ctx.fillText('推荐: npx http-server', centerX, 190);
                         
                         errorTimer--;
                         if (errorTimer <= 0) {
